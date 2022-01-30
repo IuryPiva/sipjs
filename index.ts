@@ -2,14 +2,8 @@ import {
   SimpleUser,
   SimpleUserDelegate,
   SimpleUserOptions,
-} from "../src/platform/web";
-import {
-  getAudio,
-  getButton,
-  getButtons,
-  getInput,
-  getSpan,
-} from "./utils.ts";
+} from "./SIP.JS/dist/sip.js";
+import { getAudio, getButton, getButtons, getInput, getSpan } from "./utils.ts";
 
 const serverSpan = getSpan("server");
 const targetSpan = getSpan("target");
