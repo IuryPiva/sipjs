@@ -1,8 +1,4 @@
-import {
-  SimpleUser,
-  SimpleUserDelegate,
-  SimpleUserOptions,
-} from "./SIP.JS/dist/sip.js";
+import { SimpleUser, SimpleUserDelegate, SimpleUserOptions } from "https://esm.sh/sip.js/lib/platform/web";
 import { getAudio, getButton, getButtons, getInput, getSpan } from "./utils.ts";
 
 const serverSpan = getSpan("server");
