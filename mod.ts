@@ -30,7 +30,7 @@ async function handleRequest(request: Request): Promise<Response> {
   }
 
   return new Response(
-    Deno.readFileSync("index.html"),
+    await Deno.readFile("./index.html"),
     {
       headers: {
         "content-type": "text/html; charset=utf-8",
