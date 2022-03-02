@@ -11,18 +11,20 @@ async function handleRequest(request: Request): Promise<Response> {
 
   // Check if the request is for index.ts
   if (pathname.startsWith("/index.ts")) {
-    // Read the index.ts file from the file system.
-    const { files } = await Deno.emit("./index.ts", {
-      bundle: "module",
-      compilerOptions: { sourceMap: false },
-    });
+    if (!Deno.env.get("DENO_REGION")) {
+      // Read the index.ts file from the file system.
+      const { files } = await Deno.emit("./index.ts", {
+        bundle: "module",
+        compilerOptions: { sourceMap: false },
+      });
 
-    const [[fileName, file]] = Object.entries(files);
+      const [[_, file]] = Object.entries(files);
 
-    console.log({ fileName });
+      await Deno.writeTextFile("./bundle.js", file);
+    }
 
     // Respond to the request with the index.ts file.
-    return new Response(file, {
+    return new Response(await Deno.readFile("./bundle.js"), {
       headers: {
         "content-type": "application/javascript",
       },
