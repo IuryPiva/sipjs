@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.114.0/http/server.ts";
+import { bundle } from "./bundle.ts";
 
 async function handleRequest(request: Request): Promise<Response> {
   const { pathname } = new URL(request.url);
@@ -9,22 +10,13 @@ async function handleRequest(request: Request): Promise<Response> {
   // 2. We read the asset from the file system.
   // 3. We send the asset back to the client.
 
-  // Check if the request is for index.ts
-  if (pathname.startsWith("/index.ts")) {
+  if (pathname.endsWith(".ts")) {
     if (!Deno.env.get("DENO_REGION")) {
-      // Read the index.ts file from the file system.
-      const { files } = await Deno.emit("./index.ts", {
-        bundle: "module",
-        compilerOptions: { sourceMap: false },
-      });
-
-      const [[_, file]] = Object.entries(files);
-
-      await Deno.writeTextFile("./bundle.js", file);
+      await bundle();
     }
 
     // Respond to the request with the index.ts file.
-    return new Response(await Deno.readFile("./bundle.js"), {
+    return new Response(await Deno.readFile(`./dist/${pathname}.js`), {
       headers: {
         "content-type": "application/javascript",
       },
@@ -32,7 +24,7 @@ async function handleRequest(request: Request): Promise<Response> {
   }
 
   return new Response(
-    await Deno.readFile("./index.html"),
+    await Deno.readFile("./src/index.html"),
     {
       headers: {
         "content-type": "text/html; charset=utf-8",
